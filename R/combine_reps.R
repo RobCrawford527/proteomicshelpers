@@ -1,51 +1,46 @@
 combine_reps <- function(data,
                          samples = NULL,
-                         key_col,
-                         value_col,
-                         sample_format,
+                         sam_col,
+                         rep_col,
+                         val_col,
                          min_reps = 1){
 
-  # create samples vector if not defined already
-  # create list of sample columns
-  # define columns
+  # change column names
+  colnames(data)[colnames(data) == sam_col] <- "sam"
+  colnames(data)[colnames(data) == rep_col] <- "rep"
+  colnames(data)[colnames(data) == val_col] <- "val"
+
+  # create samples if not defined already
   if (is.null(samples)){
-    samples <- unique(data[,key_col])
+    samples <- unique(data$sam)
   }
-  columns <- strsplit(sample_format, split="_")[[1]]
-
-  # rename columns
-  colnames(data)[colnames(data) == key_col] <- "key_col"
-  colnames(data)[colnames(data) == value_col] <- "value_col"
-
-  # format data frame
-  output <- separate(data,col=key_col,into=columns,sep="_")
-  output <- unite(output,col=key_col,columns[columns!="Replicate"],sep="_")
 
   # define replicates
-  replicates <- levels(as.factor(output[,"Replicate"]))
+  replicates <- levels(as.factor(data$rep))
 
   # calculate mean for each protein
-  output <- spread(output,key=Replicate,value=value_col)
-  output$mean <- rowMeans(output[,replicates],na.rm=TRUE)
+  data <- spread(data, key = rep, value = val)
+  data$mean <- rowMeans(data[,replicates], na.rm = TRUE)
 
   # identify number of reps each protein is present in
-  output$count <- rowSums(!is.na(output[,replicates]))
+  # remove mean values for proteins present in fewer than min_reps
+  data$mean[rowSums(!is.na(data[,replicates])) < min_reps] <- NA
 
-  # remove any proteins present in fewer than minimum reps
-  output[,"mean"][output[,"count"] < min_reps] <- NA
+  # add mean to replicates
+  # gather replicates
+  # keep only mean values (and discard NAs)
+  replicates <- c(replicates, "mean")
+  data <- tidyr::gather(data,
+                        key = rep,
+                        value = val,
+                        tidyr::all_of(replicates))
+  data <- dplyr::filter(data, rep == "mean" & !is.na(val))
 
-  # remove count column and format data frame
-  # add mean to other replicates
-  output <- subset(output,select=-count)
-  replicates <- c(replicates,"mean")
-  output <- gather(output,key="Replicate",value=value_col,all_of(replicates))
-  output <- separate(output,col=key_col,into=columns[columns!="Replicate"],sep="_")
-  output <- unite(output,col=key_col,columns,sep="_")
+  # revert column names
+  colnames(data)[colnames(data)=="sam"] <- sam_col
+  colnames(data)[colnames(data)=="rep"] <- rep_col
+  colnames(data)[colnames(data)=="val"] <- val_col
 
-  # rename columns
-  colnames(output)[colnames(output)=="key_col"] <- key_col
-  colnames(output)[colnames(output)=="value_col"] <- value_col
-
-  # return output data frame
-  output
+  # return output data frame: mean values only
+  data
 }

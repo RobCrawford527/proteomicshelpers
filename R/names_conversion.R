@@ -2,7 +2,7 @@ names_conversion <- function(data,
                              names_col,
                              fromType = "UNIPROT",
                              toType = c("GENENAME", "ORF"),
-                             OrgDb = org.Sc.sgd.db::org.Sc.sgd.db){
+                             OrgDb){
 
   # extract names column from data frame
   names <- as.data.frame(data[,names_col])
