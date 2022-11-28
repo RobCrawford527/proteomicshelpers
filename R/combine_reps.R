@@ -1,3 +1,23 @@
+#' Calculate Mean Across Replicates
+#'
+#' @param data A data frame containing multiple replicates
+#' @param samples A list of samples to calculate means for. If none specified, defaults to all samples in data.
+#' @param sam_col Name of the column indicating the samples
+#' @param rep_col Name of the column indicating the replicate
+#' @param val_col Name of the column containing the values
+#' @param min_reps Minimum number of replicates a protein must be present in to have mean calculated (default 1)
+#'
+#' @return A data frame in the same format as the input, containing the mean values
+#' @export
+#'
+#' @examples
+#' combine_reps(data = proteinGroups,
+#'              samples = NULL,
+#'              sam_col = "Sample",
+#'              rep_col = "Replicate",
+#'              val_col = "Intensity",
+#'              min_reps = 3)
+#'
 combine_reps <- function(data,
                          samples = NULL,
                          sam_col,

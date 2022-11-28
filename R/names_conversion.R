@@ -1,3 +1,19 @@
+#' Gene & Protein Name Conversion
+#'
+#' @param data A data frame
+#' @param names_col The column containing the names you want to convert
+#' @param fromType The starting format of the names (default UNIPROT), as defined by clusterProfiler
+#' @param toType The format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler
+#' @param OrgDb The organism database to use
+#'
+#' @return A data frame containing both the original names and the conversions
+#' @export
+#'
+#' @examples
+#' names <- names_conversion(data = proteinGroups,
+#'                           names_col = "Protein.IDs",
+#'                           OrgDb = org.Sc.sgd.db)
+#'
 names_conversion <- function(data,
                              names_col,
                              fromType = "UNIPROT",
