@@ -11,12 +11,6 @@
 #' @export
 #'
 #' @examples
-#' combine_reps(data = proteinGroups,
-#'              samples = NULL,
-#'              sam_col = "Sample",
-#'              rep_col = "Replicate",
-#'              val_col = "Intensity",
-#'              min_reps = 3)
 #'
 combine_reps <- function(data,
                          samples = NULL,
@@ -39,7 +33,7 @@ combine_reps <- function(data,
   replicates <- levels(as.factor(data$rep))
 
   # calculate mean for each protein
-  data <- spread(data, key = rep, value = val)
+  data <- tidyr::spread(data, key = rep, value = val)
   data$mean <- rowMeans(data[,replicates], na.rm = TRUE)
 
   # identify number of reps each protein is present in
@@ -51,8 +45,8 @@ combine_reps <- function(data,
   # keep only mean values (and discard NAs)
   replicates <- c(replicates, "mean")
   data <- tidyr::gather(data,
-                        key = rep,
-                        value = val,
+                        key = "rep",
+                        value = "val",
                         tidyr::all_of(replicates))
   data <- dplyr::filter(data, rep == "mean" & !is.na(val))
 

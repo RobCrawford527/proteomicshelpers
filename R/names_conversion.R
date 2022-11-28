@@ -10,9 +10,6 @@
 #' @export
 #'
 #' @examples
-#' names <- names_conversion(data = proteinGroups,
-#'                           names_col = "Protein.IDs",
-#'                           OrgDb = org.Sc.sgd.db)
 #'
 names_conversion <- function(data,
                              names_col,
