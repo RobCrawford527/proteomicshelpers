@@ -1,10 +1,10 @@
 #' Gene & Protein Name Conversion
 #'
-#' @param data A data frame
-#' @param names_col The column containing the names you want to convert
-#' @param fromType The starting format of the names (default UNIPROT), as defined by clusterProfiler
-#' @param toType The format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler
-#' @param OrgDb The organism database to use
+#' @param data A data frame in long format
+#' @param names_col Column containing the names you want to convert
+#' @param fromType Starting format of the names (default UNIPROT), as defined by clusterProfiler
+#' @param toType Format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler
+#' @param OrgDb Organism database to use
 #'
 #' @return A data frame containing both the original names and the conversions
 #' @export

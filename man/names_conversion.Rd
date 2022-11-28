@@ -13,15 +13,15 @@ names_conversion(
 )
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{A data frame in long format}
 
-\item{names_col}{The column containing the names you want to convert}
+\item{names_col}{Column containing the names you want to convert}
 
-\item{fromType}{The starting format of the names (default UNIPROT), as defined by clusterProfiler}
+\item{fromType}{Starting format of the names (default UNIPROT), as defined by clusterProfiler}
 
-\item{toType}{The format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler}
+\item{toType}{Format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler}
 
-\item{OrgDb}{The organism database to use}
+\item{OrgDb}{Organism database to use}
 }
 \value{
 A data frame containing both the original names and the conversions

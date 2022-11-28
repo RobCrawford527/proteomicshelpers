@@ -9,13 +9,13 @@ combine_reps(data, samples = NULL, sam_col, rep_col, val_col, min_reps = 1)
 \arguments{
 \item{data}{A data frame containing multiple replicates}
 
-\item{samples}{A list of samples to calculate means for. If none specified, defaults to all samples in data.}
+\item{samples}{List of samples to calculate means for (defaults to all)}
 
-\item{sam_col}{Name of the column indicating the samples}
+\item{sam_col}{Column indicating the samples}
 
-\item{rep_col}{Name of the column indicating the replicate}
+\item{rep_col}{Column indicating the replicate}
 
-\item{val_col}{Name of the column containing the values}
+\item{val_col}{Column containing the values}
 
 \item{min_reps}{Minimum number of replicates a protein must be present in to have mean calculated (default 1)}
 }

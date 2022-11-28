@@ -2,3 +2,4 @@
 
 export(combine_reps)
 export(names_conversion)
+export(protein_count)

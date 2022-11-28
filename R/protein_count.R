@@ -1,3 +1,19 @@
+#' Determine & Plot Number of Proteins Per Sample
+#'
+#' @param data A data frame in long format
+#' @param samples List of samples to count (defaults to all)
+#' @param names_col Column containing protein names
+#' @param sam_col Column containing samples
+#' @param val_col Column containing intensity values
+#' @param plot Whether to the output should be a plot or not (default FALSE)
+#' @param format Format of the sample names, as a vector
+#' @param fill Column to use for colouring plot (must be within format)
+#'
+#' @return A plot and/or data frame showing the number of proteins detected in each sample
+#' @export
+#'
+#' @examples
+#'
 protein_count <- function(data,
                           samples = NULL,
                           names_col,
@@ -33,7 +49,6 @@ protein_count <- function(data,
     # define fill column
     summary[,"fill"] <- summary[,"sam"]
     if (!is.null(fill)){
-      format <- strsplit(format, split="_")[[1]]
       summary <- tidyr::separate(summary, col = fill, into = format, sep="_")
       colnames(summary)[colnames(summary) == fill] <- "fill"
     }

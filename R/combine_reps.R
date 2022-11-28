@@ -1,10 +1,10 @@
 #' Calculate Mean Across Replicates
 #'
 #' @param data A data frame containing multiple replicates
-#' @param samples A list of samples to calculate means for. If none specified, defaults to all samples in data.
-#' @param sam_col Name of the column indicating the samples
-#' @param rep_col Name of the column indicating the replicate
-#' @param val_col Name of the column containing the values
+#' @param samples List of samples to calculate means for (defaults to all)
+#' @param sam_col Column indicating the samples
+#' @param rep_col Column indicating the replicate
+#' @param val_col Column containing the values
 #' @param min_reps Minimum number of replicates a protein must be present in to have mean calculated (default 1)
 #'
 #' @return A data frame in the same format as the input, containing the mean values
