@@ -61,7 +61,7 @@ pca_enhanced <- function(data,
   # create colour and shape columns
   pr <- as.data.frame(pr$x)
   pr[,c("sam", "colour")] <- rownames(pr)
-  pr[,"shape"] <- 1
+  pr[,"shape"] <- "shape"
 
   # split into individual parts
   # define colour column
