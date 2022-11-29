@@ -2,6 +2,7 @@
 
 export(combine_reps)
 export(enrichGO_enhanced)
+export(enrichGO_plot)
 export(names_conversion)
 export(pca_enhanced)
 export(protein_count)
