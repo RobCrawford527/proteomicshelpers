@@ -1,19 +1,36 @@
+#' Perform Gene Ontology Analysis
+#'
+#' @param genes The vector of gene names to be analysed
+#' @param OrgDb Organism database to use
+#' @param keyType Starting format of the names (default UNIPROT), as defined by clusterProfiler
+#' @param ont The ontologies to analyse (BP, CC and/or MF; defaults to "all")
+#' @param reference Data frame containing the background list in multiple formats
+#' @param simplify Whether to simplify the GO result
+#' @param evaluate Whether to evaluate the GO result
+#' @param convert Whether to convert the names in the GO result
+#' @param toType Format to convert the names to (if convert = TRUE)
+#'
+#' @return A data frame containing the enriched GO terms
+#' @export
+#'
+#' @examples
+#'
 enrichGO_enhanced <- function(genes,
                               OrgDb,
                               keyType = "ORF",
                               ont = "all",
                               reference,
-                              toType = "GENENAME",
                               simplify = TRUE,
                               evaluate = TRUE,
-                              convert = TRUE){
+                              convert = TRUE,
+                              toType = "GENENAME"){
 
   # GO enrichment analysis on gene list
   go <- clusterProfiler::enrichGO(gene = genes,
                                   OrgDb = OrgDb,
                                   keyType = keyType,
                                   ont = ont,
-                                  universe = reference$keyType)
+                                  universe = reference[,keyType])
 
   # simplify result
   if (simplify == TRUE){

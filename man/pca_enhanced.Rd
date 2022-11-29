@@ -11,8 +11,8 @@ pca_enhanced(
   sam_col,
   val_col,
   format = NULL,
-  colour = NULL,
-  shape = NULL
+  colour_col = NULL,
+  shape_col = NULL
 )
 }
 \arguments{
