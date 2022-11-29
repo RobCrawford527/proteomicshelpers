@@ -36,9 +36,8 @@ protein_count <- function(data,
   # summarise protein counts
   summary <- data.frame(sam = samples,
                         count = NA)
-  rownames(summary) <- summary$sam
-  for (s in samples){
-    summary[s, "count"] <- nrow(dplyr::filter(data, sam == s & !is.na(val)))
+  for (s in 1:nrow(summary)){
+    summary[s, "count"] <- nrow(dplyr::filter(data, sam == summary[s, "sam"] & !is.na(val)))
   }
 
   # plot if plot == TRUE
