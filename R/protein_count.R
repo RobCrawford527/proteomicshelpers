@@ -55,7 +55,9 @@ protein_count <- function(data,
 
     # plot
     plot <- ggplot2::ggplot(data = summary,
-                            mapping = ggplot2::aes(x = sample, y = count, fill = fill)) +
+                            mapping = ggplot2::aes(x = sample,
+                                                   y = count,
+                                                   fill = fill)) +
       ggplot2::geom_col() +
       ggplot2::geom_text(ggplot2::aes(label = count),
                          angle = 90,

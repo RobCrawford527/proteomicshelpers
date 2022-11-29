@@ -1,57 +1,78 @@
-pca_function <- function(data,
+pca_enhanced <- function(data,
+                         samples = NULL,
                          names_col,
-                         samples,
-                         sample_format,
-                         colour_col = "combined",
-                         shape_col = NA){
+                         sam_col,
+                         val_col,
+                         format = NULL,
+                         colour = NULL,
+                         shape = NULL){
 
-  # columns
-  sample_format <- strsplit(sample_format,split="_")[[1]]
+  # change column names
+  colnames(data)[colnames(data) == names_col] <- "names"
+  colnames(data)[colnames(data) == sam_col] <- "sam"
+  colnames(data)[colnames(data) == val_col] <- "val"
 
-  # select value columns and remove missing values
-  # print number of proteins
-  rownames(data) <- data[,names_col]
-  pca <- t(na.omit(data[,samples]))
-  print(ncol(pca))
+  # create samples if not defined already
+  if (is.null(samples)){
+    samples <- unique(data$sam)
+  }
+
+  # spread data to wide format
+  # transpose and remove missing values
+  # print number of proteins included
+  data <- tidyr::spread(data, key = sam, value = val)
+  rownames(data) <- data$names
+  data <- t(na.omit(data[,samples]))
+  print(paste(ncol(data), " protein(s) included", sep=""))
 
   # calculate principle components
-  pr <- prcomp(pca,scale=TRUE,retx=TRUE,center=TRUE)
+  pr <- stats::prcomp(data,
+                      scale = TRUE,
+                      retx = TRUE,
+                      center = TRUE)
 
   # calculate percentage of variance explained by PC1 and PC2
-  var_pc1 <- round((pr$sdev[1]^2)/sum(pr$sdev^2)*100,1)
-  var_pc2 <- round((pr$sdev[2]^2)/sum(pr$sdev^2)*100,1)
+  var1 <- paste("PC1 (",
+                round((pr$sdev[1]^2) / sum(pr$sdev^2) * 100, 1),
+                "% of variance)",
+                sep="")
+  var2 <- paste("PC2 (",
+                round((pr$sdev[2]^2) / sum(pr$sdev^2) * 100, 1),
+                "% of variance)",
+                sep="")
 
   # add sample data to pr
+  # create colour and shape columns
   pr <- as.data.frame(pr$x)
-  pr[,c("sample","sample2")] <- rownames(pr)
-  pr <- separate(pr,col=sample2,into=sample_format,sep="_")
+  pr[,c("sam", "colour")] <- rownames(pr)
+  pr[,"shape"] <- NA
 
-  # new columns for colour and shape
-  # if option is "combined", unite columns to form "condition" column
-  if (is.na(colour_col)){
-    pr[,"colour_col"] <- "colour"
-  } else if (colour_col == "combined"){
-    pr <- unite(pr,col="colour_col",sample_format[sample_format!="Replicate"],sep="_")
-  } else {
-    pr[,"colour_col"] <- pr[,colour_col]
-  }
-  if (is.na(shape_col)){
-    pr[,"shape_col"] <- "shape"
-  } else if (colour_col == "combined"){
-    pr[,"shape_col"] <- "shape"
-  } else {
-    pr[,"shape_col"] <- pr[,shape_col]
+  # split into individual parts
+  # define colour column
+  # define shape column
+  if (!is.null(colour_col)){
+    pr <- tidyr::separate(pr, col = colour, into = format, sep="_")
+    colnames(pr)[colnames(pr) == colour_col] <- "colour"
+
+    if (!is.null(shape_col)){
+      pr$shape <- pr[,shape_col]
+    }
   }
 
-  # plot PCA result
-  plot <- ggplot(pr,aes(x=PC1,y=PC2,colour=colour_col,shape=shape_col)) +
-    geom_point(size=5,alpha=0.8) +
-    geom_text(aes(label=Replicate),colour="black") +
-    coord_equal() +
-    xlab(paste("PC1 (",var_pc1,"% of variance)",sep="")) +
-    ylab(paste("PC2 (",var_pc2,"% of variance)",sep="")) +
-    theme_classic() +
-    theme(legend.position='right')
+  # plot
+  plot <- ggplot2::ggplot(data = pr,
+                          mapping = ggplot2::aes(x = PC1,
+                                                 y = PC2,
+                                                 colour = colour,
+                                                 shape = shape)) +
+    ggplot2::geom_point(size = 5, alpha = 0.8) +
+    ggplot2::geom_text(ggplot2::aes(label = sam),
+                       colour = "black") +
+    ggplot2::coord_equal() +
+    ggplot2::xlab(var1) +
+    ggplot2::ylab(var2) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = 'right')
 
   # return plot
   plot
