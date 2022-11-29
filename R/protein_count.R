@@ -36,7 +36,7 @@ protein_count <- function(data,
   # summarise protein counts
   summary <- data.frame(sam = samples,
                         count = NA)
-  rownames(summary) <- summary$sample
+  rownames(summary) <- summary$sam
   for (s in samples){
     summary[s, "count"] <- nrow(dplyr::filter(data, sam == s & !is.na(val)))
   }
@@ -55,7 +55,7 @@ protein_count <- function(data,
 
     # plot
     plot <- ggplot2::ggplot(data = summary,
-                            mapping = ggplot2::aes(x = sample,
+                            mapping = ggplot2::aes(x = sam,
                                                    y = count,
                                                    fill = fill)) +
       ggplot2::geom_col() +
