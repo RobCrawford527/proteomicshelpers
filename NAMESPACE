@@ -2,4 +2,5 @@
 
 export(combine_reps)
 export(names_conversion)
+export(pca_enhanced)
 export(protein_count)

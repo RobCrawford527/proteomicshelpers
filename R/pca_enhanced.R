@@ -1,11 +1,27 @@
+#' Produce PCA Plots to Compare Proteomics Samples
+#'
+#' @param data A data frame in long format
+#' @param samples List of samples to count (defaults to all)
+#' @param names_col Column containing protein names
+#' @param sam_col Column containing samples
+#' @param val_col Column containing intensity values
+#' @param format Format of the sample names, as a vector
+#' @param colour Column to use for colouring points (defaults to sample, otherwise must be within format)
+#' @param shape Column to use for determining shape of points (defaults to NA, otherwise must be within format)
+#'
+#' @return A plot showing the first two PCs
+#' @export
+#'
+#' @examples
+#'
 pca_enhanced <- function(data,
                          samples = NULL,
                          names_col,
                          sam_col,
                          val_col,
                          format = NULL,
-                         colour = NULL,
-                         shape = NULL){
+                         colour_col = NULL,
+                         shape_col = NULL){
 
   # change column names
   colnames(data)[colnames(data) == names_col] <- "names"
@@ -22,7 +38,7 @@ pca_enhanced <- function(data,
   # print number of proteins included
   data <- tidyr::spread(data, key = sam, value = val)
   rownames(data) <- data$names
-  data <- t(na.omit(data[,samples]))
+  data <- t(stats::na.omit(data[,samples]))
   print(paste(ncol(data), " protein(s) included", sep=""))
 
   # calculate principle components
