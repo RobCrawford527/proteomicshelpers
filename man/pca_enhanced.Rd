@@ -28,9 +28,9 @@ pca_enhanced(
 
 \item{format}{Format of the sample names, as a vector}
 
-\item{colour}{Column to use for colouring points (defaults to sample, otherwise must be within format)}
+\item{colour_col}{Column to use for colouring points (defaults to sample, otherwise must be within format)}
 
-\item{shape}{Column to use for determining shape of points (defaults to NA, otherwise must be within format)}
+\item{shape_col}{Column to use for determining shape of points (defaults to NA, otherwise must be within format)}
 }
 \value{
 A plot showing the first two PCs

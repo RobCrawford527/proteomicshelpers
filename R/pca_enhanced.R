@@ -6,8 +6,8 @@
 #' @param sam_col Column containing samples
 #' @param val_col Column containing intensity values
 #' @param format Format of the sample names, as a vector
-#' @param colour Column to use for colouring points (defaults to sample, otherwise must be within format)
-#' @param shape Column to use for determining shape of points (defaults to NA, otherwise must be within format)
+#' @param colour_col Column to use for colouring points (defaults to sample, otherwise must be within format)
+#' @param shape_col Column to use for determining shape of points (defaults to NA, otherwise must be within format)
 #'
 #' @return A plot showing the first two PCs
 #' @export

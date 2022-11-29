@@ -35,7 +35,7 @@ enrichGO_plot <- function(go_result,
                                                     size = p.adjust,
                                                     group = Description)) +
     ggplot2::geom_point() +
-    ggplot2::scale_colour_viridis(option = "plasma",
+    viridis::scale_colour_viridis(option = "plasma",
                                   discrete = FALSE,
                                   begin = 0,
                                   end = 0.85,
