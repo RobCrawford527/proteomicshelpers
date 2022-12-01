@@ -86,12 +86,12 @@ assign_missingness <- function(data,
   count <- tidyr::gather(data = count,
                          key = "comparison",
                          value = "missingness",
-                         all_of(comparisons))
+                         dplyr::all_of(comparisons))
   count[,"sample"] <- count[,"comparison"]
   count <- tidyr::separate(data = count,
                            col = sample,
                            into = c("sample", "reference"),
-                           sep="_vs_")
+                           sep = "_vs_")
   count <- tidyr::gather(data = count,
                          key = "type",
                          value = "sam",
