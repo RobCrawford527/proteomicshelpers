@@ -1,0 +1,59 @@
+ribosome_engagement <- function(data,
+                                samples = NULL,
+                                sam_col,
+                                val_col,
+                                key_col,
+                                ribosome_fractions,
+                                total,
+                                normalise = TRUE){
+  
+  # change column names
+  colnames(data)[colnames(data) == sam_col] <- "sam"
+  colnames(data)[colnames(data) == val_col] <- "val"
+  colnames(data)[colnames(data) == key_col] <- "key"
+  
+  # create samples if not defined already
+  if (is.null(samples)){
+    samples <- unique(data$sam)
+  }
+  
+  # define all values of key column
+  # spread data using key column
+  # reverse log2 transform
+  fractions <- unique(data$key)
+  data <- tidyr::spread(data = data,
+                        key = key,
+                        value = val)
+  data[,ribosome_fractions] <- 2 ^ data[,ribosome_fractions]
+  
+  # calculate ribosome engagement for each protein
+  data$ribosome_engagement <- rowSums(data[,ribosome_fractions], na.rm = TRUE)
+  
+  # log2 transform
+  # replace infinite values with NAs
+  data[,c(ribosome_fractions, "ribosome_engagement")] <- log2(data[,c(ribosome_fractions, "ribosome_engagement")])
+  data$ribosome_engagement[is.infinite(data$ribosome_engagement)] <- NA
+
+  # normalise to totals
+  if (normalise == TRUE){
+    data[,c(ribosome_fractions, "ribosome_engagement")] <- data[,c(ribosome_fractions, "ribosome_engagement")] - data[,total]
+  }
+  
+  # return to original format
+  # filter to keep only total and ribosome engagement
+  data <- tidyr::gather(data = data,
+                        key = "key",
+                        value = "val",
+                        dplyr::all_of(c(fractions,
+                                        "ribosome_engagement")))
+  data <- dplyr::filter(.data = data,
+                        key %in% c(total, "ribosome_engagement"))
+  
+  # revert column names
+  colnames(data)[colnames(data) == "sam"] <- sam_col
+  colnames(data)[colnames(data) == "val"] <- val_col
+  colnames(data)[colnames(data) == "key"] <- key_col
+  
+  # return output data frame
+  data
+}
