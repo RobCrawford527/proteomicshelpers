@@ -4,7 +4,9 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Robert", "Crawford", , "rcrawford527@hotmail.co.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9788-5137"))
-Description: What the package does (one paragraph).
+Description: Various helper functions for proteomics data analysis. Includes 
+    functions for quality control, summarising replicates, and gene ontology
+    analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

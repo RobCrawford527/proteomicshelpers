@@ -32,8 +32,11 @@ combine_reps <- function(data,
   # define replicates
   replicates <- levels(as.factor(data$rep))
 
+  # spread data
   # calculate mean for each protein
-  data <- tidyr::spread(data, key = rep, value = val)
+  data <- tidyr::spread(data = data,
+                        key = rep,
+                        value = val)
   data$mean <- rowMeans(data[,replicates], na.rm = TRUE)
 
   # identify number of reps each protein is present in
@@ -44,16 +47,16 @@ combine_reps <- function(data,
   # gather replicates
   # keep only mean values (and discard NAs)
   replicates <- c(replicates, "mean")
-  data <- tidyr::gather(data,
+  data <- tidyr::gather(data = data,
                         key = "rep",
                         value = "val",
                         tidyr::all_of(replicates))
-  data <- dplyr::filter(data, rep == "mean" & !is.na(val))
+  data <- dplyr::filter(.data = data, rep == "mean" & !is.na(val))
 
   # revert column names
-  colnames(data)[colnames(data)=="sam"] <- sam_col
-  colnames(data)[colnames(data)=="rep"] <- rep_col
-  colnames(data)[colnames(data)=="val"] <- val_col
+  colnames(data)[colnames(data) == "sam"] <- sam_col
+  colnames(data)[colnames(data) == "rep"] <- rep_col
+  colnames(data)[colnames(data) == "val"] <- val_col
 
   # return output data frame: mean values only
   data
