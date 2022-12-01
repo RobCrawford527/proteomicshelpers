@@ -1,3 +1,19 @@
+#' Assign Missingness to Proteomics Samples
+#'
+#' @param data A data frame in long format
+#' @param names_col Column containing protein names
+#' @param sam_col Column containing samples
+#' @param val_col Column containing intensity values
+#' @param rep_col Column containing replicates
+#' @param ref Reference sample
+#' @param MAR_thres Minimum samples for MAR (default 2)
+#' @param MNAR_thres Maximum samples for MNAR (default 0)
+#'
+#' @return A data frame in long format, with missingness assigned for each comparison
+#' @export
+#'
+#' @examples
+#'
 assign_missingness <- function(data,
                                names_col,
                                sam_col,
