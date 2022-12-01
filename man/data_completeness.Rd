@@ -8,12 +8,8 @@ data_completeness(
   data,
   samples = NULL,
   names_col,
-  sam_rep_col,
   sam_col,
-  comp_col,
   imp_col,
-  ref,
-  ref_comp,
   thresholds = c(0.9, 0.8, 0.6)
 )
 }
@@ -24,17 +20,9 @@ data_completeness(
 
 \item{names_col}{Column containing protein names}
 
-\item{sam_rep_col}{Column containing samples (including replicates)}
-
-\item{sam_col}{Column containing samples (excluding replicates)}
-
-\item{comp_col}{Column containing comparisons}
+\item{sam_col}{Column containing samples (including replicates)}
 
 \item{imp_col}{Column containing whether value is imputed or not}
-
-\item{ref}{Reference sample (excluding replicate)}
-
-\item{ref_comp}{Reference comparison}
 
 \item{thresholds}{Thresholds defining quality categories (must be three
 values; default 0.9, 0.8, 0.6)}

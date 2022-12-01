@@ -3,12 +3,8 @@
 #' @param data A data frame in long format
 #' @param samples List of samples to assess (defaults to all)
 #' @param names_col Column containing protein names
-#' @param sam_rep_col Column containing samples (including replicates)
-#' @param sam_col Column containing samples (excluding replicates)
-#' @param comp_col Column containing comparisons
+#' @param sam_col Column containing samples (including replicates)
 #' @param imp_col Column containing whether value is imputed or not
-#' @param ref Reference sample (excluding replicate)
-#' @param ref_comp Reference comparison
 #' @param thresholds Thresholds defining quality categories (must be three
 #'     values; default 0.9, 0.8, 0.6)
 #'
@@ -21,34 +17,25 @@
 data_completeness <- function(data,
                               samples = NULL,
                               names_col,
-                              sam_rep_col,
                               sam_col,
-                              comp_col,
                               imp_col,
-                              ref,
-                              ref_comp,
                               thresholds = c(0.9, 0.8, 0.6)){
 
   # change column names
   colnames(data)[colnames(data) == names_col] <- "names"
-  colnames(data)[colnames(data) == sam_rep_col] <- "sam_rep"
   colnames(data)[colnames(data) == sam_col] <- "sam"
-  colnames(data)[colnames(data) == comp_col] <- "comp"
   colnames(data)[colnames(data) == imp_col] <- "imp"
 
   # create samples if not defined already
   if (is.null(samples)){
-    samples <- unique(data$sam_rep)
+    samples <- unique(data$sam)
   }
 
-  # filter so rows are unique (remove extra reference rows)
-  # keep relevant columns
+  # create copy of data frame and keep relevant columns
   # spread data frame - wide format
-  quality <- dplyr::filter(.data = data,
-                           !(sam == ref & comp != ref_comp))
-  quality <- quality[,c("names", "sam_rep", "imp")]
+  quality <- data[,c("names", "sam", "imp")]
   quality <- tidyr::spread(quality,
-                           key = sam_rep,
+                           key = sam,
                            value = imp)
 
   # determine how many values are present for protein
