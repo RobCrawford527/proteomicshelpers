@@ -35,16 +35,22 @@ pca_enhanced <- function(data,
     samples <- unique(data$sam)
   }
 
+  # keep only columns of interest
   # spread data to wide format
+  # name rows with protein names
+  data <- data[,c("names", "sam", "val")]
+  data <- tidyr::spread(data = data,
+                        key = sam,
+                        value = val)
+  rownames(data) <- data$names
+
   # transpose and remove missing values
   # print number of proteins included
-  data <- tidyr::spread(data, key = sam, value = val)
-  rownames(data) <- data$names
   data <- t(stats::na.omit(data[,samples]))
   print(paste(ncol(data), " protein(s) included", sep=""))
 
   # calculate principle components
-  pr <- stats::prcomp(data,
+  pr <- stats::prcomp(x = data,
                       scale = TRUE,
                       retx = TRUE,
                       center = TRUE)
@@ -69,7 +75,10 @@ pca_enhanced <- function(data,
   # define colour column
   # define shape column
   if (!is.null(colour_col)){
-    pr <- tidyr::separate(pr, col = colour, into = format, sep="_")
+    pr <- tidyr::separate(data = pr,
+                          col = colour,
+                          into = format,
+                          sep="_")
     colnames(pr)[colnames(pr) == colour_col] <- "colour"
 
     if (!is.null(shape_col)){
