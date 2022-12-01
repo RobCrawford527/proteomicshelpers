@@ -5,7 +5,8 @@
 #' @param filename The filename to save to
 #' @param width The width of the saved plot (in mm)
 #'
-#' @return A plot of gene ratios for enriched GO terms, coloured by adjusted p-value
+#' @return A plot of gene ratios for enriched GO terms, coloured by
+#'     adjusted p-value
 #' @export
 #'
 #' @examples
@@ -54,7 +55,8 @@ enrichGO_plot <- function(go_result,
     ggplot2::theme_classic() +
     ggplot2::theme(axis.title.y = ggplot2::element_blank(),
                    axis.text.x = ggplot2::element_text(colour = "black"),
-                   axis.text.y = ggplot2::element_text(colour = "black", size = 8),
+                   axis.text.y = ggplot2::element_text(colour = "black",
+                                                       size = 8),
                    strip.background = ggplot2::element_blank(),
                    strip.text = ggplot2::element_blank(),
                    legend.position = "right")

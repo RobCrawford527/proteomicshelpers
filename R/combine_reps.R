@@ -5,9 +5,11 @@
 #' @param sam_col Column indicating the samples
 #' @param rep_col Column indicating the replicate
 #' @param val_col Column containing the values
-#' @param min_reps Minimum number of replicates a protein must be present in to have mean calculated (default 1)
+#' @param min_reps Minimum number of replicates a protein must be present
+#'     in to have mean calculated (default 1)
 #'
-#' @return A data frame in the same format as the input, containing the mean values
+#' @return A data frame in the same format as the input, containing the
+#'     mean values
 #' @export
 #'
 #' @examples

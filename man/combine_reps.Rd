@@ -17,10 +17,12 @@ combine_reps(data, samples = NULL, sam_col, rep_col, val_col, min_reps = 1)
 
 \item{val_col}{Column containing the values}
 
-\item{min_reps}{Minimum number of replicates a protein must be present in to have mean calculated (default 1)}
+\item{min_reps}{Minimum number of replicates a protein must be present
+in to have mean calculated (default 1)}
 }
 \value{
-A data frame in the same format as the input, containing the mean values
+A data frame in the same format as the input, containing the
+mean values
 }
 \description{
 Calculate Mean Across Replicates

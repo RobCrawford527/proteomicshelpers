@@ -30,7 +30,8 @@ replicate_correlations(
 \item{ncol}{Number of columns for facet_wrap}
 }
 \value{
-A plot showing pairwise linear correlations between replicates of the same sample
+A plot showing pairwise linear correlations between replicates
+of the same sample
 }
 \description{
 Calculate Pairwise Correlations Between Replicates

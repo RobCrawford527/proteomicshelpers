@@ -36,10 +36,12 @@ data_completeness(
 
 \item{ref_comp}{Reference comparison}
 
-\item{thresholds}{Thresholds defining quality categories (must be three values; default 0.9, 0.8, 0.6)}
+\item{thresholds}{Thresholds defining quality categories (must be three
+values; default 0.9, 0.8, 0.6)}
 }
 \value{
-A data frame, indicating the proportion of sample values that are imputed for each protein
+A data frame, indicating the proportion of sample values that
+are imputed for each protein
 }
 \description{
 Evaluate Completeness of Proteomics Data

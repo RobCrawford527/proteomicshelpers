@@ -8,7 +8,8 @@
 #' @param nrow Number of rows for facet_wrap
 #' @param ncol Number of columns for facet_wrap
 #'
-#' @return A plot showing pairwise linear correlations between replicates of the same sample
+#' @return A plot showing pairwise linear correlations between replicates
+#'     of the same sample
 #' @export
 #'
 #' @examples

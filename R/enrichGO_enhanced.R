@@ -2,9 +2,11 @@
 #'
 #' @param genes The vector of gene names to be analysed
 #' @param OrgDb Organism database to use
-#' @param keyType Starting format of the names (default UNIPROT), as defined by clusterProfiler
+#' @param keyType Starting format of the names (default UNIPROT), as
+#'     defined by clusterProfiler
 #' @param ont The ontologies to analyse (BP, CC and/or MF; defaults to "all")
-#' @param reference Data frame containing the background list in multiple formats
+#' @param reference Data frame containing the background list in multiple
+#'     formats
 #' @param simplify Whether to simplify the GO result
 #' @param evaluate Whether to evaluate the GO result
 #' @param convert Whether to convert the names in the GO result
@@ -42,10 +44,16 @@ enrichGO_enhanced <- function(genes,
 
   # evaluate columns to convert to numeric
   if (evaluate == TRUE){
-    go$GeneRatio <- apply(as.matrix(go$GeneRatio), 1, function(x) eval(parse(text = x)))
-    go$BgRatio <- apply(as.matrix(go$BgRatio), 1, function(x) eval(parse(text = x)))
+    go$GeneRatio <- apply(as.matrix(go$GeneRatio),
+                          1,
+                          function(x) eval(parse(text = x)))
+    go$BgRatio <- apply(as.matrix(go$BgRatio),
+                        1,
+                        function(x) eval(parse(text = x)))
     go$p.adjust <- -log10(go$p.adjust)
-    go$Description <- factor(go$Description, levels = go$Description[order(go$GeneRatio, decreasing = FALSE)])
+    go$Description <- factor(go$Description,
+                             levels = go$Description[order(go$GeneRatio,
+                                                           decreasing = FALSE)])
   }
 
   # convert names to different format

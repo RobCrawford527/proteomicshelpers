@@ -17,9 +17,11 @@ names_conversion(
 
 \item{names_col}{Column containing the names you want to convert}
 
-\item{fromType}{Starting format of the names (default UNIPROT), as defined by clusterProfiler}
+\item{fromType}{Starting format of the names (default UNIPROT), as
+defined by clusterProfiler}
 
-\item{toType}{Format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler}
+\item{toType}{Format(s) to convert the names to (default GENENAME and ORF),
+as defined by clusterProfiler}
 
 \item{OrgDb}{Organism database to use}
 }

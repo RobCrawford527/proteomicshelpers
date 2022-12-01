@@ -1,22 +1,31 @@
+#' Sum Up Fractions to Calculate Ribosome Engagement
+#'
+#' @param data A data frame in long format. The "fractions" must be present
+#'     in a separate column to the other sample information.
+#' @param val_col Column containing intensity values
+#' @param key_col Column containing fractions
+#' @param ribosome_fractions The ribosome fractions to sum up
+#' @param total The "total" fraction to use for normalisation
+#' @param normalise Whether or not to normalise the ribosome_engagement score
+#'     to the total (default is TRUE)
+#'
+#' @return A data frame containing (normalised) ribosome engagement scores
+#'     and totals
+#' @export
+#'
+#' @examples
+#'
 ribosome_engagement <- function(data,
-                                samples = NULL,
-                                sam_col,
                                 val_col,
                                 key_col,
                                 ribosome_fractions,
-                                total,
+                                total = NULL,
                                 normalise = TRUE){
-  
+
   # change column names
-  colnames(data)[colnames(data) == sam_col] <- "sam"
   colnames(data)[colnames(data) == val_col] <- "val"
   colnames(data)[colnames(data) == key_col] <- "key"
-  
-  # create samples if not defined already
-  if (is.null(samples)){
-    samples <- unique(data$sam)
-  }
-  
+
   # define all values of key column
   # spread data using key column
   # reverse log2 transform
@@ -25,10 +34,10 @@ ribosome_engagement <- function(data,
                         key = key,
                         value = val)
   data[,ribosome_fractions] <- 2 ^ data[,ribosome_fractions]
-  
+
   # calculate ribosome engagement for each protein
   data$ribosome_engagement <- rowSums(data[,ribosome_fractions], na.rm = TRUE)
-  
+
   # log2 transform
   # replace infinite values with NAs
   data[,c(ribosome_fractions, "ribosome_engagement")] <- log2(data[,c(ribosome_fractions, "ribosome_engagement")])
@@ -38,7 +47,7 @@ ribosome_engagement <- function(data,
   if (normalise == TRUE){
     data[,c(ribosome_fractions, "ribosome_engagement")] <- data[,c(ribosome_fractions, "ribosome_engagement")] - data[,total]
   }
-  
+
   # return to original format
   # filter to keep only total and ribosome engagement
   data <- tidyr::gather(data = data,
@@ -48,12 +57,11 @@ ribosome_engagement <- function(data,
                                         "ribosome_engagement")))
   data <- dplyr::filter(.data = data,
                         key %in% c(total, "ribosome_engagement"))
-  
+
   # revert column names
-  colnames(data)[colnames(data) == "sam"] <- sam_col
   colnames(data)[colnames(data) == "val"] <- val_col
   colnames(data)[colnames(data) == "key"] <- key_col
-  
+
   # return output data frame
   data
 }

@@ -9,7 +9,8 @@
 #' @param format Format of the sample names, as a vector
 #' @param fill Column to use for colouring plot (must be within format)
 #'
-#' @return A plot and/or data frame showing the number of proteins detected in each sample
+#' @return A plot and/or data frame showing the number of proteins detected
+#'     in each sample
 #' @export
 #'
 #' @examples

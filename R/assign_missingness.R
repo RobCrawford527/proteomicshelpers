@@ -9,7 +9,8 @@
 #' @param MAR_thres Minimum samples for MAR (default 2)
 #' @param MNAR_thres Maximum samples for MNAR (default 0)
 #'
-#' @return A data frame in long format, with missingness assigned for each comparison
+#' @return A data frame in long format, with missingness assigned for
+#'     each comparison
 #' @export
 #'
 #' @examples

@@ -9,9 +9,11 @@
 #' @param imp_col Column containing whether value is imputed or not
 #' @param ref Reference sample (excluding replicate)
 #' @param ref_comp Reference comparison
-#' @param thresholds Thresholds defining quality categories (must be three values; default 0.9, 0.8, 0.6)
+#' @param thresholds Thresholds defining quality categories (must be three
+#'     values; default 0.9, 0.8, 0.6)
 #'
-#' @return A data frame, indicating the proportion of sample values that are imputed for each protein
+#' @return A data frame, indicating the proportion of sample values that
+#'     are imputed for each protein
 #' @export
 #'
 #' @examples

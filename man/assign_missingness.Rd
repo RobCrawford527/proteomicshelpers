@@ -33,7 +33,8 @@ assign_missingness(
 \item{MNAR_thres}{Maximum samples for MNAR (default 0)}
 }
 \value{
-A data frame in long format, with missingness assigned for each comparison
+A data frame in long format, with missingness assigned for
+each comparison
 }
 \description{
 Assign Missingness to Proteomics Samples

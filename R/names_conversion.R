@@ -2,8 +2,10 @@
 #'
 #' @param data A data frame in long format
 #' @param names_col Column containing the names you want to convert
-#' @param fromType Starting format of the names (default UNIPROT), as defined by clusterProfiler
-#' @param toType Format(s) to convert the names to (default GENENAME and ORF), as defined by clusterProfiler
+#' @param fromType Starting format of the names (default UNIPROT), as
+#'     defined by clusterProfiler
+#' @param toType Format(s) to convert the names to (default GENENAME and ORF),
+#'     as defined by clusterProfiler
 #' @param OrgDb Organism database to use
 #'
 #' @return A data frame containing both the original names and the conversions

@@ -33,7 +33,8 @@ protein_count(
 \item{fill}{Column to use for colouring plot (must be within format)}
 }
 \value{
-A plot and/or data frame showing the number of proteins detected in each sample
+A plot and/or data frame showing the number of proteins detected
+in each sample
 }
 \description{
 Determine & Plot Number of Proteins Per Sample

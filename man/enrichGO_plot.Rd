@@ -16,7 +16,8 @@ enrichGO_plot(go_result, save = FALSE, filename = NULL, width = 160)
 \item{width}{The width of the saved plot (in mm)}
 }
 \value{
-A plot of gene ratios for enriched GO terms, coloured by adjusted p-value
+A plot of gene ratios for enriched GO terms, coloured by
+adjusted p-value
 }
 \description{
 Plot Gene Ontology Analysis Result
