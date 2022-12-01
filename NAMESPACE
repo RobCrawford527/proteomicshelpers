@@ -3,6 +3,7 @@
 export(assign_missingness)
 export(combine_reps)
 export(data_completeness)
+export(deltaR)
 export(enrichGO_enhanced)
 export(enrichGO_plot)
 export(names_conversion)
