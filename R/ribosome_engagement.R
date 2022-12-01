@@ -48,15 +48,9 @@ ribosome_engagement <- function(data,
     data[,c(ribosome_fractions, "ribosome_engagement")] <- data[,c(ribosome_fractions, "ribosome_engagement")] - data[,total]
   }
 
-  # return to original format
-  # filter to keep only total and ribosome engagement
-  data <- tidyr::gather(data = data,
-                        key = "key",
-                        value = "val",
-                        dplyr::all_of(c(fractions,
-                                        "ribosome_engagement")))
-  data <- dplyr::filter(.data = data,
-                        key %in% c(total, "ribosome_engagement"))
+  # filter to keep only total and ribosome engagement columns
+  columns <- colnames(data)[!(colnames(data) %in% ribosome_fractions)]
+  data <- data[,columns]
 
   # revert column names
   colnames(data)[colnames(data) == "val"] <- val_col
