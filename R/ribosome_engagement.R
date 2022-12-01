@@ -36,16 +36,16 @@ ribosome_engagement <- function(data,
   data[,ribosome_fractions] <- 2 ^ data[,ribosome_fractions]
 
   # calculate ribosome engagement for each protein
-  data$ribosome_engagement <- rowSums(data[,ribosome_fractions], na.rm = TRUE)
+  data$ribosome.engagement <- rowSums(data[,ribosome_fractions], na.rm = TRUE)
 
   # log2 transform
   # replace infinite values with NAs
-  data[,c(ribosome_fractions, "ribosome_engagement")] <- log2(data[,c(ribosome_fractions, "ribosome_engagement")])
-  data$ribosome_engagement[is.infinite(data$ribosome_engagement)] <- NA
+  data[,c(ribosome_fractions, "ribosome.engagement")] <- log2(data[,c(ribosome_fractions, "ribosome.engagement")])
+  data$ribosome.engagement[is.infinite(data$ribosome.engagement)] <- NA
 
   # normalise to totals
   if (normalise == TRUE){
-    data[,c(ribosome_fractions, "ribosome_engagement")] <- data[,c(ribosome_fractions, "ribosome_engagement")] - data[,total]
+    data[,c(ribosome_fractions, "ribosome.engagement")] <- data[,c(ribosome_fractions, "ribosome.engagement")] - data[,total]
   }
 
   # filter to keep only total and ribosome engagement columns
@@ -55,6 +55,7 @@ ribosome_engagement <- function(data,
   # revert column names
   colnames(data)[colnames(data) == "val"] <- val_col
   colnames(data)[colnames(data) == "key"] <- key_col
+  colnames(data)[colnames(data) == total] <- "total"
 
   # return output data frame
   data
