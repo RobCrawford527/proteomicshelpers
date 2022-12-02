@@ -63,8 +63,8 @@ zscore <- function(data,
                               (1 - stats::pnorm(q = comp[,"val"], mean = ref_mean, sd = ref_sd)) * 2)
 
       # FDR correction
-      comp <- comp[order(comp$pval, decreasing = FALSE),]
-      comp[,"rank"] <- order(abs(comp[,"pval"]), decreasing = FALSE)
+      comp <- comp[order(abs(comp$zscore), decreasing = TRUE),]
+      comp[,"rank"] <- order(abs(comp$zscore), decreasing = TRUE)
       comp[,"BH"] <- comp[,"rank"] / nrow(comp) * alpha
       comp[,"BH"] <- ifelse(comp[,"pval"] < comp[,"BH"],
                             TRUE,
