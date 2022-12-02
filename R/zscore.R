@@ -57,10 +57,10 @@ zscore <- function(data,
 
       # calculate z-scores
       # calculate raw p-values
-      comp[,"zscore"] <- (comp[,val] - ref_mean) / ref_sd
-      comp[,"pval"] <- ifelse(stats::pnorm(q = comp[,val], mean = ref_mean, sd = ref_sd) < 0.5,
-                              stats::pnorm(q = comp[,val], mean = ref_mean, sd = ref_sd) * 2,
-                              (1 - stats::pnorm(q = comp[,val], mean = ref_mean, sd = ref_sd)) * 2)
+      comp[,"zscore"] <- (comp[,"val"] - ref_mean) / ref_sd
+      comp[,"pval"] <- ifelse(stats::pnorm(q = comp[,"val"], mean = ref_mean, sd = ref_sd) < 0.5,
+                              stats::pnorm(q = comp[,"val"], mean = ref_mean, sd = ref_sd) * 2,
+                              (1 - stats::pnorm(q = comp[,"val"], mean = ref_mean, sd = ref_sd)) * 2)
 
       # FDR correction
       comp <- comp[order(comp$pval, decreasing = FALSE),]
@@ -82,10 +82,10 @@ zscore <- function(data,
   }
 
   # revert column names to original
-  colnames(data)[colnames(data) == "sam"] <- sam_col
-  colnames(data)[colnames(data) == "val"] <- val_col
-  colnames(data)[colnames(data) == "key"] <- key_col
-  colnames(data)[colnames(data) == "ref"] <- ref_col
+  colnames(output)[colnames(output) == "sam"] <- sam_col
+  colnames(output)[colnames(output) == "val"] <- val_col
+  colnames(output)[colnames(output) == "key"] <- key_col
+  colnames(output)[colnames(output) == "ref"] <- ref_col
 
   # return data frame
   output
