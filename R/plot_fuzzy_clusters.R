@@ -15,7 +15,7 @@
 #'     on whole numbers so divisions should be at 0.5 increments.
 #' @param nrow Number of rows to plot in facet_wrap
 #' @param ncol Number of columns to plot in facet_wrap
-#' @param ...
+#' @param ... Other parameters
 #'
 #' @return Line plots showing the proteins assigned to each cluster along with
 #'     the background and cluster centres

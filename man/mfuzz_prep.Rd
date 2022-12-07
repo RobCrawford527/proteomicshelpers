@@ -16,7 +16,7 @@ should be proteins.}
 
 \item{mode}{The method for replacing NAs (default "mean")}
 
-\item{...}{}
+\item{...}{Other parameters}
 }
 \value{
 A standardised expression set ready for fuzzy clustering using Mfuzz

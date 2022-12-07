@@ -5,7 +5,7 @@
 #' @param thres The proportion of missing values that is allowed (default 0)
 #' @param replace Whether NAs should be replaced
 #' @param mode The method for replacing NAs (default "mean")
-#' @param ...
+#' @param ... Other parameters
 #'
 #' @return A standardised expression set ready for fuzzy clustering using Mfuzz
 #' @export

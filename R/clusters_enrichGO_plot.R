@@ -1,8 +1,21 @@
+#' Plot Gene Ontology Analysis Result From Clustering
+#'
+#' @param go_result Data frame containing enriched GO terms
+#' @param save Whether to save the plot (default = FALSE)
+#' @param filename The filename to save to
+#' @param width The width of the saved plot (in mm)
+#'
+#' @return A plot of enriched GO terms in clusters, coloured by adjusted
+#'     p-value
+#' @export
+#'
+#' @examples
+#'
 clusters_enrichGO_plot <- function(go_result,
                                    save = FALSE,
                                    filename = NULL,
                                    width = 160){
-  
+
   # find min and max p.adjust values
   # round to whole number
   min_p <- round(min(go_result$p.adjust) - 0.5, 0)
@@ -14,7 +27,7 @@ clusters_enrichGO_plot <- function(go_result,
   # define limits and breaks
   limits <- c(1, max_p)
   breaks <- unique(round(seq(min_p+1, max_p-1, (max_p-min_p-2)/3), 0))
-  
+
   # plot
   go_plot <- ggplot2::ggplot(data = go_result,
                              mapping = ggplot2::aes(x = Cluster,
@@ -46,7 +59,7 @@ clusters_enrichGO_plot <- function(go_result,
                    strip.background = ggplot2::element_blank(),
                    strip.text = ggplot2::element_blank(),
                    legend.position = "right")
-  
+
   # save if appropriate
   if (save == TRUE){
     ggplot2::ggsave(filename = filename,
@@ -56,7 +69,7 @@ clusters_enrichGO_plot <- function(go_result,
                     width = width,
                     units = "mm")
   }
-  
+
   # return plot
   go_plot
 }

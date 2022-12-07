@@ -46,7 +46,7 @@ on whole numbers so divisions should be at 0.5 increments.}
 
 \item{ncol}{Number of columns to plot in facet_wrap}
 
-\item{...}{}
+\item{...}{Other parameters}
 }
 \value{
 Line plots showing the proteins assigned to each cluster along with
