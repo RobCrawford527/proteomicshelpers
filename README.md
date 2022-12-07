@@ -39,11 +39,11 @@ The package includes functions for:
   - Plotting the output from GO analysis of clusters:
     `clusters_enrichGO_plot()`
 - **Calculating ribosome engagement from multiple fractions**:
-  - Sum multiple ribosomal fractions and normalise to totals to
-    calculate ribosome engagement: `ribosome_engagement()`
-  - Calculate differences in ribosome engagement between samples:
+  - Calculating ribosome engagement, by summing multiple ribosomal
+    fractions and normalising to totals: `ribosome_engagement()`
+  - Calculating differences in ribosome engagement between samples:
     `deltaR()`
-  - Calculate z-scores and p-values for differences in ribosome
+  - Calculating z-scores and p-values for differences in ribosome
     engagement, relative to a reference Population: `zscore()`
 
 ## Installation
