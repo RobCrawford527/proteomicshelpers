@@ -13,14 +13,14 @@ functions from other packages, including `clusterProfiler` ([Yu et al,
 2012](https://doi.org/10.1089/omi.2011.0118)) and `Mfuzz` ([Kumar &
 Futschik, 2007](https://doi.org/10.6026%2F97320630002005)).
 
-The package includes functions for: \* Converting names:
-`names_conversion()` \* Combining replicates: `combine_reps()` \*
-Quality control: `protein_count()`, `replicate_correlations()`,
-`pca_enhanced()`, `assign_missingness()` and `data_completeness()` \*
+The package includes functions for: + Converting names:
+`names_conversion()` + Combining replicates: `combine_reps()` + Quality
+control: `protein_count()`, `replicate_correlations()`,
+`pca_enhanced()`, `assign_missingness()` and `data_completeness()` +
 Fuzzy clustering: `mfuzz_prep()`, `plot_fuzzy_clusters()` and
-`alpha_core_modified()` \* Gene Ontology enrichment analysis:
+`alpha_core_modified()` + Gene Ontology enrichment analysis:
 `enrichGO_enhanced()`, `enrichGO_plot()`, `clusters_enrichGO_enhanced()`
-and `clusters_enrichGO_plot()` \* Calculating ribosome engagement from
+and `clusters_enrichGO_plot()` + Calculating ribosome engagement from
 multiple fractions: `ribosome_engagement()`, `deltaR()` and `zscore()`
 
 ## Installation
