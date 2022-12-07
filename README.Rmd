@@ -22,12 +22,27 @@ A package containing useful helper functions for various aspects of proteomics d
 
 The package includes functions for:
 
-* **Converting names**: `names_conversion()`
-* **Combining replicates**: `combine_reps()`
-* **Quality control**: `protein_count()`, `replicate_correlations()`, `pca_enhanced()`, `assign_missingness()` and `data_completeness()`
-* **Fuzzy clustering**: `mfuzz_prep()`, `plot_fuzzy_clusters()` and `alpha_core_modified()`
-* **Gene Ontology enrichment analysis**: `enrichGO_enhanced()`, `enrichGO_plot()`, `clusters_enrichGO_enhanced()` and `clusters_enrichGO_plot()`
-* **Calculating ribosome engagement from multiple fractions**: `ribosome_engagement()`, `deltaR()` and `zscore()`
+* **Converting names** from one format to another: `names_conversion()`
+* **Calculating the mean across replicates**: `combine_reps()`
+* **Quality control**:
+  + Counting the number of proteins per sample: `protein_count()`
+  + Calculating pairwise linear correlations between replicates: `replicate_correlations()`
+  + Assessing the similarity between samples using PCA: `pca_enhanced()`
+  + Assigning missingness for samples: `assign_missingness()`
+  + Calculating the proportion of values that are imputed for each protein: `data_completeness()`
+* **Fuzzy clustering**:
+  + Preparing data for fuzzy clustering: `mfuzz_prep()`
+  + Plotting the output of fuzzy clustering: `plot_fuzzy_clusters()`
+  + Extracting cluster cores from fuzzy clustering: `alpha_core_modified()`
+* **Gene Ontology enrichment analysis**:
+  + Identifying enriched GO terms from a gene list: `enrichGO_enhanced()`
+  + Identifying enriched GO terms in clusters: `clusters_enrichGO_enhanced()`
+  + Plotting the output from GO analysis: `enrichGO_plot()`
+  + Plotting the output from GO analysis of clusters: `clusters_enrichGO_plot()`
+* **Calculating ribosome engagement from multiple fractions**:
+  + Sum multiple ribosomal fractions and normalise to totals to calculate ribosome engagement: `ribosome_engagement()`
+  + Calculate differences in ribosome engagement between samples: `deltaR()`
+  + Calculate z-scores and p-values for differences in ribosome engagement, relative to a reference Population: `zscore()`
 
 ## Installation
 
