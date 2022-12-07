@@ -1,3 +1,28 @@
+#' Plot Output from Fuzzy Clustering
+#'
+#' @param eset A standardised expression set
+#' @param clusters A list containing the output from fuzzy clustering
+#' @param samples A list of the samples analysed
+#' @param plot_background Whether or not to plot the background data for each
+#'     cluster (default TRUE)
+#' @param plot_centres Whether or not to plot the cluster centres (default TRUE)
+#' @param mem_thres Cluster membership threshold, i.e. the minimum membership
+#'     value for proteins to be plotted in each cluster
+#' @param lwd Line thickness (default 0.75)
+#' @param major_x Major divisions to plot along the x axis. Samples are plotted
+#'     on whole numbers so divisions should be at 0.5 increments.
+#' @param minor_x Minor divisions to plot along the x axis. Samples are plotted
+#'     on whole numbers so divisions should be at 0.5 increments.
+#' @param nrow Number of rows to plot in facet_wrap
+#' @param ncol Number of columns to plot in facet_wrap
+#' @param ...
+#'
+#' @return Line plots showing the proteins assigned to each cluster along with
+#'     the background and cluster centres
+#' @export
+#'
+#' @examples
+#'
 plot_fuzzy_clusters <- function(eset,
                                 clusters,
                                 samples,
@@ -10,15 +35,15 @@ plot_fuzzy_clusters <- function(eset,
                                 nrow = NULL,
                                 ncol = NULL,
                                 ...){
-  
+
   # convert eset to data frame
   exprs <- as.data.frame(Biobase::exprs(eset))
   exprs$protein <- row.names(exprs)
-  
+
   # convert membership values to data frame
   mem <- as.data.frame(clusters[["membership"]])
   mem$protein <- row.names(mem)
-  
+
   # convert cluster centres to data frame
   # keep cluster levels
   cen <- as.data.frame(clusters[["centers"]])
@@ -31,13 +56,13 @@ plot_fuzzy_clusters <- function(eset,
                        dplyr::all_of(samples))
   cen[,"sample"] <- factor(x = cen[,"sample"],
                            levels = samples)
-  
+
   # merge expression and membership values
   exprs <- merge(exprs,
                  mem,
                  by = "protein",
                  all = TRUE)
-  
+
   # check number of columns
   # tidy data to allow plotting with ggplot
   if (ncol(exprs) != 1 + length(samples) + length(clus)){
@@ -51,19 +76,19 @@ plot_fuzzy_clusters <- function(eset,
                          key = "sample",
                          value = "intensity",
                          dplyr::all_of(samples))
-  
+
   # convert sample and cluster columns to factor
   exprs[,"sample"] <- factor(x = exprs[,"sample"],
                              levels = samples)
   exprs[,"cluster"] <- as.factor(as.numeric(exprs[,"cluster"]))
-  
+
   # create basic structure for plot
   fuzzy_plot <- ggplot2::ggplot(data = exprs,
                                 mapping = ggplot2::aes(x = sample,
                                                        y = intensity,
                                                        colour = membership,
                                                        group = protein))
-  
+
   # plot background data (i.e. proteins that don't belong to a given cluster)
   if (plot_background == TRUE){
     fuzzy_plot <- fuzzy_plot +
@@ -73,7 +98,7 @@ plot_fuzzy_clusters <- function(eset,
                          colour = 'grey75',
                          alpha = 0.15)
   }
-  
+
   # plot main data for each cluster
   # layer up the data in 0.05 increments ...
   # ... so that proteins with the highest membership are on top
@@ -85,10 +110,10 @@ plot_fuzzy_clusters <- function(eset,
                          lwd = lwd,
                          alpha = 0.9)
   }
-  
+
   # add in additional plot elements
   fuzzy_plot <- fuzzy_plot +
-    
+
     # divisions between groups of samples
     ggplot2::geom_vline(xintercept = minor_x,
                         colour = "grey60",
@@ -116,7 +141,7 @@ plot_fuzzy_clusters <- function(eset,
                    axis.text.x = ggplot2::element_text(angle = 90,
                                                        hjust = 1,
                                                        vjust = 0.5))
-  
+
   # plot cluster centres
   if (plot_centres == TRUE){
     fuzzy_plot <- fuzzy_plot +
@@ -124,7 +149,7 @@ plot_fuzzy_clusters <- function(eset,
                          colour = "black",
                          lwd = lwd*1.5)
   }
-  
+
   # return plot
   fuzzy_plot
 }
