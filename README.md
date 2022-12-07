@@ -6,19 +6,40 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of proteomicshelpers is to …
+A package containing useful helper functions for various aspects of
+proteomics data analysis, including quality control, gene ontology
+analysis and fuzzy clustering. Many of the functions are wrappers for
+functions from other packages, including `clusterProfiler` ([Yu et al,
+2012](https://doi.org/10.1089/omi.2011.0118)) and `Mfuzz` ([Kumar &
+Futschik, 2007](https://doi.org/10.6026%2F97320630002005)).
+
+The package includes functions for: \* Converting names:
+`names_conversion()` \* Combining replicates: `combine_reps()` \*
+Quality control: `protein_count()`, `replicate_correlations()`,
+`pca_enhanced()`, `assign_missingness()` and `data_completeness()` \*
+Fuzzy clustering: `mfuzz_prep()`, `plot_fuzzy_clusters()` and
+`alpha_core_modified()` \* Gene Ontology enrichment analysis:
+`enrichGO_enhanced()`, `enrichGO_plot()`, `clusters_enrichGO_enhanced()`
+and `clusters_enrichGO_plot()` \* Calculating ribosome engagement from
+multiple fractions: `ribosome_engagement()`, `deltaR()` and `zscore()`
 
 ## Installation
 
 You can install the development version of proteomicshelpers from
 [GitHub](https://github.com/) with:
 
+Note: if it is not already installed, remove the comment sign (#) at the
+start of the first line to install `devtools`.
+
 ``` r
 # install.packages("devtools")
-devtools::install_github("RobCrawford527/proteomicshelpers")
+devtools::install_github("RobCrawford527/proteomicshelpers", dependencies = TRUE)
 ```
 
-## Example
+The dependencies = TRUE argument ensures that other packages that are
+required for proteomicshelpers to work correctly are installed too.
+
+## Quality control
 
 This is a basic example which shows you how to solve a common problem:
 
