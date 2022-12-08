@@ -10,8 +10,9 @@ A package containing useful helper functions for various aspects of
 proteomics data analysis, including quality control, gene ontology
 analysis and fuzzy clustering. Many of the functions are wrappers for
 functions from other packages, including `clusterProfiler` ([Yu et al,
-2012](https://doi.org/10.1089/omi.2011.0118)) and `Mfuzz` ([Kumar &
-Futschik, 2007](https://doi.org/10.6026%2F97320630002005)).
+2012](https://doi.org/10.1089/omi.2011.0118)), `Mfuzz` ([Kumar &
+Futschik, 2007](https://doi.org/10.6026%2F97320630002005)) and `protti`
+([Quast et al, 2021](https://doi.org/10.1093/bioadv/vbab041)).
 
 The package includes functions for:
 
@@ -95,16 +96,80 @@ appropriate. The plot can be saved directly.
 
 You can assign missingness to a set of samples using
 `assign_missingness()`, which is an adaptation of
-\[protti::assign_missingness()\]. This compares the number of values
-that are present for a given sample and the reference sample with two
+`protti::assign_missingness()`. This compares the number of values that
+are present for a given sample and the reference sample with two
 thresholds, to assign samples as “complete”, “MAR” or “MNAR”. Proteins
 that do not fit in any of these categories (i.e. have too few values in
 the sample and reference) are removed from the analysis. The output from
-`assign_missingness()` is compatible with `protti`: missing values can
-be imputed for MAR and MNAR comparisons using \[protti::impute()\].
+`assign_missingness()` is compatible with `protti`. Missing values can
+then be imputed for MAR and MNAR comparisons using `protti::impute()`.
 
 Following imputation of missing values, `data_completeness()` assesses
 how what proportion of the values for each protein are real (i.e. not
 imputed) and assigns each to one of five categories, depending on the
 thresholds that are set. This output can be written into a new object
 and merged with the imputed data frame.
+
+## Fuzzy clustering
+
+The package can be used for fuzzy clustering along with `Mfuzz`. The
+`mfuzz_prep()` function takes a data frame (which should already be in
+“wide” format, i.e. with proteins as rows and samples as columns) and
+converts it to an expression set, which is required for `Mfuzz`. Three
+other preparation steps are bundled in to this function: filtering for
+NAs, replacing NAs and standardising the data.
+
+Following `mfuzz_prep()`, fuzzy clustering itself is performed using the
+functions in `Mfuzz`. The output can then be visualised using
+`plot_fuzzy_clusters()`. This function plots profiles for proteins above
+the membership threshold for each cluster, optionally showing the
+background (i.e. all other proteins) and cluster centres.
+
+Finally, cluster alpha cores can be extracted and combined into a single
+data frame using `alpha_core_modified()`. Again this is really just a
+wrapper for `Mfuzz::acore()` that provides the output in a different
+format.
+
+## Gene Ontology enrichment analysis
+
+These functions utilise the package `clusterProfiler` to perform GO
+analysis on lists of genes (`enrichGO_enhanced()`) or clusters
+(`clusters_enrichGO_enhanced()`). There are options to simplify the
+output, evaluate the terms for plotting and convert the names to a
+different format. Converting the names relies on a data frame produced
+using `names_conversion()`, which contains the protein names in multiple
+formats.
+
+The output from both of the `enrichGO_enhanced` functions can be plotted
+using `enrichGO_plot()` or `clusters_enrichGO_plot()`, as appropriate.
+`enrichGO_plot()` shows gene ratios for enriched GO terms, coloured and
+sized according to adjusted p-value, while `clusters_enrichGO_plot()`
+shows enriched terms in the different clusters, coloured and sized
+according to adjusted p-value.
+
+## Calculating ribosome engagement
+
+Finally, the package contains functions to sum intensities across
+multiple fractions. Specifically this is intended to calculate overall
+ribosome engagement from multiple ribosome fractions, but would be
+applicable to other uses too. `ribosome_engagement()` takes a data frame
+in which the “fraction” aspect of the sample names has been separated
+from the other parts, and sums across the defined “ribosome_fractions”.
+The summed values can be normalised to the “total” fraction that is
+defined.
+
+Differences in ribosome engagement between samples can then be
+calculated using `deltaR()`. The sample names must again be rearranged
+to put them into the correct format for making the comparisons. For
+example, if the sample names are in the format
+strain_condition_fraction, they should be arranged to “strain_condition”
+and “fraction” columns for `ribosome_engagement()`, then rearranged to
+“strain_fraction” and “condition” columns for `deltaR()` (to compare the
+different conditions). By default, all pairwise comparisons will be
+performed, but you can set this to only a subset if desired.
+
+The `zscore()` function calculates z-scores and p-values for the
+differences calculated by `deltaR()`, based on a defined reference
+population (e.g. the ribosomal proteins themselves). Multiple testing
+correction is performed by default using the BH procedure for each
+comparison.
