@@ -59,41 +59,52 @@ start of the first line to install `devtools`.
 devtools::install_github("RobCrawford527/proteomicshelpers", dependencies = TRUE)
 ```
 
-The dependencies = TRUE argument ensures that other packages that are
+The `dependencies = TRUE` argument ensures that other packages that are
 required for proteomicshelpers to work correctly are installed too.
+
+## Converting names
+
+The `names_conversion()` function takes an input list of gene/protein
+names and converts them to the format(s) of your choice. It uses the
+`bitr()` function from `clusterProfiler`, so fromType and toType must be
+compatible with that. The output from the function is a data frame with
+the names in different formats. Write this into an object to store for
+reference.
+
+## Calculating means across replicates
+
+The `combine_reps()` function calculates mean intensities across the
+replicates from a proteomics experiment. By setting min_reps, proteins
+with missing values can be excluded. The default is `min_reps = 1`, so
+means are calculated for proteins with at least one value. The function
+returns a data frame in the same format as the original, but containing
+only the mean values.
 
 ## Quality control
 
-This is a basic example which shows you how to solve a common problem:
+You can count the number of proteins per sample and make a plot using
+`protein_count()`.
 
-``` r
-library(proteomicshelpers)
-## basic example code
-```
+Pairwise linear correlations between replicates of the same sample can
+be calculated using `replicate_correlations()`. The function returns a
+plot showing the R-squared value and number of shared proteins for each.
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+The `pca_enhanced()` function performs principal component analysis of a
+data frame and returns a labelled plot of the first two PCs, coloured as
+appropriate. The plot can be saved directly.
 
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
+You can assign missingness to a set of samples using
+`assign_missingness()`, which is an adaptation of
+\[protti::assign_missingness()\]. This compares the number of values
+that are present for a given sample and the reference sample with two
+thresholds, to assign samples as “complete”, “MAR” or “MNAR”. Proteins
+that do not fit in any of these categories (i.e. have too few values in
+the sample and reference) are removed from the analysis. The output from
+`assign_missingness()` is compatible with `protti`: missing values can
+be imputed for MAR and MNAR comparisons using \[protti::impute()\].
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+Following imputation of missing values, `data_completeness()` assesses
+how what proportion of the values for each protein are real (i.e. not
+imputed) and assigns each to one of five categories, depending on the
+thresholds that are set. This output can be written into a new object
+and merged with the imputed data frame.
