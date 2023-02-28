@@ -17,13 +17,10 @@
 combine_reps <- function(data,
                          samples = NULL,
                          sam_col,
-                         rep_col,
-                         val_col,
-                         min_reps = 1){
+                         val_col){
 
   # change column names
   colnames(data)[colnames(data) == sam_col] <- "sam"
-  colnames(data)[colnames(data) == rep_col] <- "rep"
   colnames(data)[colnames(data) == val_col] <- "val"
 
   # create samples if not defined already
@@ -33,6 +30,13 @@ combine_reps <- function(data,
 
   # define replicates
   replicates <- levels(as.factor(data$rep))
+
+  # group by sample
+  # summarise data
+  data <- dplyr::group_by(data, sam)
+  output <- dplyr::summarise(data,
+                             mean = mean(val, na.rm = TRUE),
+                             reps = n())
 
   # spread data
   # calculate mean for each protein

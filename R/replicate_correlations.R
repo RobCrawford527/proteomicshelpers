@@ -7,6 +7,7 @@
 #' @param rep_col Column containing replicates
 #' @param nrow Number of rows for facet_wrap
 #' @param ncol Number of columns for facet_wrap
+#' @param limits Limits for colour scale
 #'
 #' @return A plot showing pairwise linear correlations between replicates
 #'     of the same sample
@@ -16,6 +17,7 @@
 #'
 replicate_correlations <- function(data,
                                    samples = NULL,
+                                   names_col,
                                    sam_col,
                                    val_col,
                                    rep_col,
@@ -23,6 +25,7 @@ replicate_correlations <- function(data,
                                    ncol = NULL){
 
   # change column names
+  colnames(data)[colnames(data) == names_col] <- "name"
   colnames(data)[colnames(data) == sam_col] <- "sam"
   colnames(data)[colnames(data) == val_col] <- "val"
   colnames(data)[colnames(data) == rep_col] <- "rep"
@@ -36,16 +39,12 @@ replicate_correlations <- function(data,
   replicates <- levels(as.factor(data$rep))
 
   # spread data
-  data <- tidyr::spread(data = data,
+  data <- tidyr::spread(data = data[,c("name", "sam", "rep", "val")],
                         key = rep,
                         value = val)
 
   # create output data frame
-  correlations <- data.frame(sample = NA,
-                             RepX = NA,
-                             RepY = NA,
-                             adjrsq = NA,
-                             shared = NA)[0,]
+  correlations <- data.frame()
   for (s in samples){
     for (r in replicates){
       correlations <- rbind.data.frame(correlations,
@@ -53,10 +52,11 @@ replicate_correlations <- function(data,
                                                   RepX = r,
                                                   RepY = replicates,
                                                   adjrsq = NA,
-                                                  shared = NA))
+                                                  shared = NA,
+                                                  limits = NULL))
     }
   }
-  correlations <- dplyr::filter(.data = correlations, RepX < RepY)
+  correlations <- dplyr::filter(correlations, RepX < RepY)
 
   # calculate correlations between replicates
   for (i in 1:nrow(correlations)){
@@ -67,19 +67,31 @@ replicate_correlations <- function(data,
     ry <- as.character(correlations[i, "RepY"])
 
     # filter data
-    data_i <- dplyr::filter(.data = data, sam == s)
+    data_i <- dplyr::filter(data, sam == s)
     data_i <- na.omit(data_i[,c(rx, ry)])
     colnames(data_i) <- c("rx", "ry")
 
-    # calculate adjusted r-squared
-    # write into results table
-    correlations[i, "adjrsq"] <- summary(stats::lm(ry ~ rx, data = data_i))["adj.r.squared"]
-    correlations[i, "shared"] <- nrow(data_i)
+    if (nrow(data_i) > 0){
+      # calculate adjusted r-squared
+      # write into results table
+      correlations[i, "adjrsq"] <- summary(stats::lm(ry ~ rx, data = data_i))["adj.r.squared"]
+      correlations[i, "shared"] <- nrow(data_i)
+
+    } else if (nrow(data_i) == 0){
+      # write into results table
+      correlations[i, "adjrsq"] <- NA
+      correlations[i, "shared"] <- 0
+    }
   }
 
   # format output data frame
   correlations[,"RepX"] <- as.factor(correlations[,"RepX"])
   correlations[,"RepY"] <- as.factor(correlations[,"RepY"])
+
+  # define scale limits if not already
+  if (is.null(limits)){
+    limits <- c(round(min(correlations$adjrsq)-0.05, 1), 1.0)
+  }
 
   # plot correlations
   plot <- ggplot2::ggplot(data = correlations,
@@ -100,7 +112,7 @@ replicate_correlations <- function(data,
                                 end = 0.85,
                                 direction = -1,
                                 option = "inferno",
-                                limits = c(round(min(correlations$adjrsq)-0.05, 1), 1.0),
+                                limits = limits,
                                 breaks = seq(0, 1, 0.1)) +
     ggplot2::facet_wrap(dplyr::vars(sample), nrow = nrow, ncol = ncol) +
     ggplot2::coord_equal() +
