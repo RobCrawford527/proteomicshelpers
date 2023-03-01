@@ -12,7 +12,8 @@ pca_enhanced(
   val_col,
   format = NULL,
   colour_col = NULL,
-  shape_col = NULL
+  shape_col = NULL,
+  label_col = NULL
 )
 }
 \arguments{
@@ -33,6 +34,9 @@ otherwise must be within format)}
 
 \item{shape_col}{Column to use for determining shape of points (defaults
 to NA, otherwise must be within format)}
+
+\item{label_col}{Column to use for determining label of points (defaults
+to sample, otherwise must be within format)}
 }
 \value{
 A plot showing the first two PCs

@@ -10,6 +10,8 @@
 #'     otherwise must be within format)
 #' @param shape_col Column to use for determining shape of points (defaults
 #'     to NA, otherwise must be within format)
+#' @param label_col Column to use for determining label of points (defaults
+#'     to sample, otherwise must be within format)
 #'
 #' @return A plot showing the first two PCs
 #' @export
@@ -23,7 +25,8 @@ pca_enhanced <- function(data,
                          val_col,
                          format = NULL,
                          colour_col = NULL,
-                         shape_col = NULL){
+                         shape_col = NULL,
+                         label_col = NULL){
 
   # change column names
   colnames(data)[colnames(data) == names_col] <- "names"
@@ -68,7 +71,7 @@ pca_enhanced <- function(data,
   # add sample data to pr
   # create colour and shape columns
   pr <- as.data.frame(pr$x)
-  pr[,c("sam", "colour")] <- rownames(pr)
+  pr[,c("sam", "colour", "label")] <- rownames(pr)
   pr[,"shape"] <- as.factor("s")
 
   # split into individual parts
@@ -84,6 +87,9 @@ pca_enhanced <- function(data,
     if (!is.null(shape_col)){
       pr$shape <- pr[,shape_col]
     }
+    if (!is.null(label_col)){
+      pr$label <- pr[,label_col]
+    }
   }
 
   # plot
@@ -93,7 +99,7 @@ pca_enhanced <- function(data,
                                                  colour = colour,
                                                  shape = shape)) +
     ggplot2::geom_point(size = 5, alpha = 0.8) +
-    ggplot2::geom_text(ggplot2::aes(label = sam),
+    ggplot2::geom_text(ggplot2::aes(label = label),
                        colour = "black") +
     ggplot2::coord_equal() +
     ggplot2::xlab(var1) +
