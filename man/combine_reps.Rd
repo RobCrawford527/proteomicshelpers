@@ -4,7 +4,7 @@
 \alias{combine_reps}
 \title{Calculate Mean Across Replicates}
 \usage{
-combine_reps(data, samples = NULL, sam_col, rep_col, val_col, min_reps = 1)
+combine_reps(data, samples = NULL, sam_col, val_col)
 }
 \arguments{
 \item{data}{A data frame containing multiple replicates}
@@ -13,9 +13,9 @@ combine_reps(data, samples = NULL, sam_col, rep_col, val_col, min_reps = 1)
 
 \item{sam_col}{Column indicating the samples}
 
-\item{rep_col}{Column indicating the replicate}
-
 \item{val_col}{Column containing the values}
+
+\item{rep_col}{Column indicating the replicate}
 
 \item{min_reps}{Minimum number of replicates a protein must be present
 in to have mean calculated (default 1)}

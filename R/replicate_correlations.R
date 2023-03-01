@@ -22,7 +22,8 @@ replicate_correlations <- function(data,
                                    val_col,
                                    rep_col,
                                    nrow = NULL,
-                                   ncol = NULL){
+                                   ncol = NULL,
+                                   limits = NULL){
 
   # change column names
   colnames(data)[colnames(data) == names_col] <- "name"
@@ -52,8 +53,7 @@ replicate_correlations <- function(data,
                                                   RepX = r,
                                                   RepY = replicates,
                                                   adjrsq = NA,
-                                                  shared = NA,
-                                                  limits = NULL))
+                                                  shared = NA))
     }
   }
   correlations <- dplyr::filter(correlations, RepX < RepY)

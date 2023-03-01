@@ -7,11 +7,13 @@
 replicate_correlations(
   data,
   samples = NULL,
+  names_col,
   sam_col,
   val_col,
   rep_col,
   nrow = NULL,
-  ncol = NULL
+  ncol = NULL,
+  limits = NULL
 )
 }
 \arguments{
@@ -28,6 +30,8 @@ replicate_correlations(
 \item{nrow}{Number of rows for facet_wrap}
 
 \item{ncol}{Number of columns for facet_wrap}
+
+\item{limits}{Limits for colour scale}
 }
 \value{
 A plot showing pairwise linear correlations between replicates
