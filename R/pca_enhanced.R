@@ -12,6 +12,7 @@
 #'     to NA, otherwise must be within format)
 #' @param label_col Column to use for determining label of points (defaults
 #'     to sample, otherwise must be within format)
+#' @param plot_label Logical indicating whether or not to add labels to plot
 #'
 #' @return A plot showing the first two PCs
 #' @export
@@ -26,7 +27,8 @@ pca_enhanced <- function(data,
                          format = NULL,
                          colour_col = NULL,
                          shape_col = NULL,
-                         label_col = NULL){
+                         label_col = NULL,
+                         plot_label = TRUE){
 
   # change column names
   colnames(data)[colnames(data) == names_col] <- "names"
@@ -62,11 +64,11 @@ pca_enhanced <- function(data,
   var1 <- paste("PC1 (",
                 round((pr$sdev[1]^2) / sum(pr$sdev^2) * 100, 1),
                 "% of variance)",
-                sep="")
+                sep = "")
   var2 <- paste("PC2 (",
                 round((pr$sdev[2]^2) / sum(pr$sdev^2) * 100, 1),
                 "% of variance)",
-                sep="")
+                sep = "")
 
   # add sample data to pr
   # create colour and shape columns
@@ -81,7 +83,7 @@ pca_enhanced <- function(data,
     pr <- tidyr::separate(data = pr,
                           col = colour,
                           into = format,
-                          sep="_")
+                          sep = "_")
     colnames(pr)[colnames(pr) == colour_col] <- "colour"
 
     if (!is.null(shape_col)){
@@ -99,13 +101,18 @@ pca_enhanced <- function(data,
                                                  colour = colour,
                                                  shape = shape)) +
     ggplot2::geom_point(size = 5, alpha = 0.8) +
-    ggplot2::geom_text(ggplot2::aes(label = label),
-                       colour = "black") +
     ggplot2::coord_equal() +
     ggplot2::xlab(var1) +
     ggplot2::ylab(var2) +
     ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = 'right')
+    ggplot2::theme(legend.position = "right")
+
+  # add labels to plot if appropriate
+  if (plot_label == TRUE){
+    plot <- plot +
+      ggplot2::geom_text(ggplot2::aes(label = label),
+                         colour = "black")
+  }
 
   # return plot
   plot

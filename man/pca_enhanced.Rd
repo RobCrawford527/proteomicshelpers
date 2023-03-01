@@ -13,7 +13,8 @@ pca_enhanced(
   format = NULL,
   colour_col = NULL,
   shape_col = NULL,
-  label_col = NULL
+  label_col = NULL,
+  plot_label = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ to NA, otherwise must be within format)}
 
 \item{label_col}{Column to use for determining label of points (defaults
 to sample, otherwise must be within format)}
+
+\item{plot_label}{Logical indicating whether or not to add labels to plot}
 }
 \value{
 A plot showing the first two PCs
