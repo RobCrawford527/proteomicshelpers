@@ -7,10 +7,10 @@
 replicate_correlations(
   data,
   samples = NULL,
-  names_col,
-  sam_col,
-  val_col,
-  rep_col,
+  protein_id,
+  sample,
+  value,
+  replicate,
   nrow = NULL,
   ncol = NULL,
   limits = NULL
@@ -21,11 +21,13 @@ replicate_correlations(
 
 \item{samples}{List of samples to assess (defaults to all)}
 
-\item{sam_col}{Column containing samples}
+\item{protein_id}{Column containing protein names}
 
-\item{val_col}{Column containing intensity values}
+\item{sample}{Column containing samples}
 
-\item{rep_col}{Column containing replicates}
+\item{value}{Column containing intensity values}
+
+\item{replicate}{Column containing replicates}
 
 \item{nrow}{Number of rows for facet_wrap}
 
