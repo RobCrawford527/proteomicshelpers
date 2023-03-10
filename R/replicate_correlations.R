@@ -28,20 +28,19 @@ replicate_correlations <- function(data,
 
   # create list of all samples if not defined already
   if (is.null(samples)){
-    samples <- unique(data[[sample]])
+    samples <- unique(dplyr::pull(data, {{ sample }} ))
   }
 
   # define replicates
-  replicates <- unique(data[[replicate]])
+  replicates <- unique(dplyr::pull(data, {{ replicate }} ))
 
-  # spread data
-  data <- tidyr::spread(data = data[,c( {{ protein_id }}, {{ sample }}, {{ replicate }}, {{ value}} )],
-                        key = {{ replicate }},
-                        value = {{ value }} )
+  # keep only columns of interest
+  data <- dplyr::select(data,
+                        {{ protein_id }}, {{ sample }}, {{ replicate }}, {{ value }})
 
   # create output data frame
-  correlations <- tidyr::expand_grid(samples, replicates, replicates)
-  rownames(correlations) <- c("sample", "rep_x", "rep_y")
+  correlations <- as.data.frame(tidyr::expand_grid(samples, replicates, replicates))
+  colnames(correlations) <- c("sample", "rep_x", "rep_y")
   correlations <- dplyr::filter(correlations,
                                 rep_x < rep_y)
   correlations <- dplyr::mutate(correlations,
@@ -52,26 +51,31 @@ replicate_correlations <- function(data,
   for (i in 1:nrow(correlations)){
 
     # determine parameters for row of interest
-    s <- correlations[i, "sample"]
-    rx <- as.character(correlations[i, "rep_x"])
-    ry <- as.character(correlations[i, "rep_y"])
+    s <- dplyr::pull(correlations, sample)[i]
+    rx <- dplyr::pull(correlations, rep_x)[i]
+    ry <- dplyr::pull(correlations, rep_y)[i]
 
     # filter data
+    # spread data
+    # remove proteins with missing values
     data_i <- dplyr::filter(data,
-                            sample == s)
-    data_i <- na.omit(data_i)
+                            {{ sample }} == s & ( {{ replicate }} == rx | {{ replicate }} == ry))
+    data_i <- tidyr::spread(data_i,
+                            key = {{ replicate }},
+                            value = {{ value }})
+    data_i <- na.omit(data_i[,c(rx, ry)])
     colnames(data_i) <- c("rx", "ry")
 
     if (nrow(data_i) > 0){
       # calculate adjusted r-squared
       # write into results table
-      correlations[i, "adj_rsq"] <- summary(stats::lm( {{ ry }} ~ {{ rx }} , data_i))["adj.r.squared"]
-      correlations[i, "shared"] <- nrow(data_i)
+      correlations[i,"adj_rsq"] <- summary(stats::lm(ry ~ rx, data_i))["adj.r.squared"]
+      correlations[i,"shared"] <- nrow(data_i)
 
     } else if (nrow(data_i) == 0){
       # write into results table
-      correlations[i, "adj_rsq"] <- NA
-      correlations[i, "shared"] <- 0
+      correlations[i,"adj_rsq"] <- NA
+      correlations[i,"shared"] <- 0
     }
   }
 
@@ -81,7 +85,7 @@ replicate_correlations <- function(data,
 
   # define scale limits if not already
   if (is.null(limits)){
-    limits <- c(round(min(correlations[["adj_rsq"]]) - 0.05, 1), 1.0)
+    limits <- c(round(min(correlations[,"adj_rsq"]) - 0.05, 1), 1.0)
   }
 
   # plot correlations
