@@ -2,16 +2,16 @@
 #'
 #' @param data A data frame in long format
 #' @param samples List of samples to count (defaults to all)
-#' @param names_col Column containing protein names
-#' @param sam_col Column containing samples
-#' @param val_col Column containing intensity values
-#' @param format Format of the sample names, as a vector
-#' @param colour_col Column to use for colouring points (defaults to sample,
+#' @param protein_id Column containing protein names
+#' @param sample Column containing samples
+#' @param value Column containing intensity values
+#' @param colour Column to use for colouring points (defaults to sample,
 #'     otherwise must be within format)
-#' @param shape_col Column to use for determining shape of points (defaults
+#' @param shape Column to use for determining shape of points (defaults
 #'     to NA, otherwise must be within format)
-#' @param label_col Column to use for determining label of points (defaults
+#' @param label Column to use for determining label of points (defaults
 #'     to sample, otherwise must be within format)
+#' @param normalise Logical indicating whether or not to normalise values for plotting
 #' @param plot_label Logical indicating whether or not to add labels to plot
 #'
 #' @return A plot showing the first two PCs
@@ -21,85 +21,79 @@
 #'
 pca_enhanced <- function(data,
                          samples = NULL,
-                         names_col,
-                         sam_col,
-                         val_col,
-                         format = NULL,
-                         colour_col = NULL,
-                         shape_col = NULL,
-                         label_col = NULL,
+                         protein_id,
+                         sample,
+                         value,
+                         colour = NULL,
+                         shape = NULL,
+                         label = NULL,
+                         normalise = FALSE,
                          plot_label = TRUE){
 
-  # change column names
-  colnames(data)[colnames(data) == names_col] <- "names"
-  colnames(data)[colnames(data) == sam_col] <- "sam"
-  colnames(data)[colnames(data) == val_col] <- "val"
-
-  # create samples if not defined already
+  # create list of all samples if not defined already
   if (is.null(samples)){
-    samples <- unique(data$sam)
+    samples <- unique(dplyr::pull(data, {{ sample }} ))
   }
 
   # keep only columns of interest
   # spread data to wide format
   # name rows with protein names
-  data <- data[,c("names", "sam", "val")]
-  data <- tidyr::spread(data = data,
-                        key = sam,
-                        value = val)
-  rownames(data) <- data$names
+  data_pc <- dplyr::select(data,
+                           {{ protein_id }} , {{ sample }} , {{ value }} )
+  data_pc <- tidyr::spread(data = data_pc,
+                           key = {{ sample }} ,
+                           value = {{ value }} )
 
   # transpose and remove missing values
   # print number of proteins included
-  data <- t(stats::na.omit(data[,samples]))
-  print(paste(ncol(data), " protein(s) included", sep=""))
+  data_pc <- t(stats::na.omit(data_pc[,samples]))
+  print(paste(ncol(data_pc), " protein(s) included", sep = ""))
 
   # calculate principle components
-  pr <- stats::prcomp(x = data,
+  pr <- stats::prcomp(x = data_pc,
                       scale = TRUE,
                       retx = TRUE,
                       center = TRUE)
 
   # calculate percentage of variance explained by PC1 and PC2
   var1 <- paste("PC1 (",
-                round((pr$sdev[1]^2) / sum(pr$sdev^2) * 100, 1),
+                round((pr$sdev[1] ^ 2) / sum(pr$sdev ^ 2) * 100, 1),
                 "% of variance)",
                 sep = "")
   var2 <- paste("PC2 (",
-                round((pr$sdev[2]^2) / sum(pr$sdev^2) * 100, 1),
+                round((pr$sdev[2] ^ 2) / sum(pr$sdev ^ 2) * 100, 1),
                 "% of variance)",
                 sep = "")
 
-  # add sample data to pr
-  # create colour and shape columns
+  # extract pr data frame
+  # normalise values if appropriate
   pr <- as.data.frame(pr$x)
-  pr[,c("sam", "colour", "label")] <- rownames(pr)
-  pr[,"shape"] <- as.factor("s")
+  pr[,"sample"] <- rownames(pr)
+  if (normalise == TRUE){
+    pr[,c("PC1", "PC2")] <- apply(pr[,c("PC1", "PC2")], 2, function(x) (x - mean(x)) / sd(x))
+  }
 
-  # split into individual parts
-  # define colour column
-  # define shape column
-  if (!is.null(colour_col)){
-    pr <- tidyr::separate(data = pr,
-                          col = colour,
-                          into = format,
-                          sep = "_")
-    colnames(pr)[colnames(pr) == colour_col] <- "colour"
-
-    if (!is.null(shape_col)){
-      pr$shape <- pr[,shape_col]
-    }
-    if (!is.null(label_col)){
-      pr$label <- pr[,label_col]
-    }
+  # add colour, shape and label columns
+  if (plot_label == TRUE){
+    pr <- dplyr::left_join(pr,
+                           dplyr::distinct(dplyr::select(data,
+                                                         {{ sample }} , {{ colour }} , {{ shape }} , {{ label }} )),
+                           by = dplyr::join_by( sample == {{ sample }} ),
+                           keep = FALSE)
+  } else {
+    pr <- dplyr::left_join(pr,
+                           dplyr::distinct(dplyr::select(data,
+                                                         {{ sample }} , {{ colour }} , {{ shape }} )),
+                           by = dplyr::join_by( sample == {{ sample }} ),
+                           keep = FALSE)
   }
 
   # plot
   plot <- ggplot2::ggplot(data = pr,
                           mapping = ggplot2::aes(x = PC1,
                                                  y = PC2,
-                                                 colour = colour,
-                                                 shape = shape)) +
+                                                 colour = {{ colour }} ,
+                                                 shape = {{ shape }} )) +
     ggplot2::geom_point(size = 5, alpha = 0.8) +
     ggplot2::coord_equal() +
     ggplot2::xlab(var1) +
@@ -110,7 +104,7 @@ pca_enhanced <- function(data,
   # add labels to plot if appropriate
   if (plot_label == TRUE){
     plot <- plot +
-      ggplot2::geom_text(ggplot2::aes(label = label),
+      ggplot2::geom_text(ggplot2::aes(label = {{ label }} ),
                          colour = "black")
   }
 

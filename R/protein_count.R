@@ -2,12 +2,11 @@
 #'
 #' @param data A data frame in long format
 #' @param samples List of samples to count (defaults to all)
-#' @param names_col Column containing protein names
-#' @param sam_col Column containing samples
-#' @param val_col Column containing intensity values
+#' @param protein_id Column containing protein names
+#' @param sample Column containing samples
+#' @param value Column containing intensity values
 #' @param plot Whether to the output should be a plot or not (default FALSE)
-#' @param format Format of the sample names, as a vector
-#' @param fill Column to use for colouring plot (must be within format)
+#' @param fill Column to use for colouring plot
 #'
 #' @return A plot and/or data frame showing the number of proteins detected
 #'     in each sample
@@ -17,47 +16,38 @@
 #'
 protein_count <- function(data,
                           samples = NULL,
-                          names_col,
-                          sam_col,
-                          val_col,
+                          protein_id,
+                          sample,
+                          value,
                           plot = FALSE,
-                          format = NULL,
-                          fill = NULL){
+                          fill){
 
-  # change column names
-  colnames(data)[colnames(data) == names_col] <- "names"
-  colnames(data)[colnames(data) == sam_col] <- "sam"
-  colnames(data)[colnames(data) == val_col] <- "val"
-
-  # create samples if not defined already
-  if (is.null(samples)){
-    samples <- unique(data$sam)
+  # filter data frame for samples of interest (if appropriate)
+  if (!is.null(samples)){
+    data <- dplyr::filter(data,
+                          {{ sample }} %in% samples)
   }
 
+  # group data frame
   # summarise protein counts
-  summary <- data.frame(sam = samples,
-                        count = NA)
-  for (s in 1:nrow(summary)){
-    summary[s, "count"] <- nrow(dplyr::filter(data, sam == summary[s, "sam"] & !is.na(val)))
-  }
+  counts <- dplyr::group_by(data, {{ sample }} )
+  counts <- dplyr::summarise(counts, count = dplyr::n() )
 
-  # plot if plot == TRUE
+  # plot if appropriate
   if (plot == TRUE){
 
-    # create copy of sample column
-    # split into individual parts
-    # define fill column
-    summary[,"fill"] <- summary[,"sam"]
-    if (!is.null(fill)){
-      summary <- tidyr::separate(summary, col = fill, into = format, sep="_")
-      colnames(summary)[colnames(summary) == fill] <- "fill"
-    }
+    # add fill column
+    counts <- dplyr::left_join(counts,
+                               dplyr::distinct(dplyr::select(data,
+                                                             {{ sample }} , {{ fill }} )),
+                               by = dplyr::join_by( {{ sample }} ),
+                               keep = FALSE)
 
-    # plot
-    plot <- ggplot2::ggplot(data = summary,
-                            mapping = ggplot2::aes(x = sam,
+    # create plot
+    plot <- ggplot2::ggplot(data = counts,
+                            mapping = ggplot2::aes(x = {{ sample }} ,
                                                    y = count,
-                                                   fill = fill)) +
+                                                   fill = {{ fill }} )) +
       ggplot2::geom_col() +
       ggplot2::geom_text(ggplot2::aes(label = count),
                          angle = 90,
@@ -65,19 +55,19 @@ protein_count <- function(data,
                          vjust = 0.5,
                          hjust = 0.5) +
       ggplot2::scale_y_continuous(limits = c(0, NA),
-                                  breaks = seq(0, 5000, 200),
+                                  breaks = seq(0, 10000, 200),
                                   expand = c(0, 0)) +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5, hjust = 1),
-                     strip.background = ggplot2::element_blank(), legend.position = 'none')
+                     strip.background = ggplot2::element_blank(), legend.position = "none")
 
     # print summary and return plot
-    print(summary)
+    print(counts)
     plot
 
   } else {
 
     # return summary
-    summary
+    counts
   }
 }
