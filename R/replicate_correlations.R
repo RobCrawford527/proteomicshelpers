@@ -56,26 +56,43 @@ replicate_correlations <- function(data,
     ry <- dplyr::pull(correlations, rep_y)[i]
 
     # filter data
-    # spread data
-    # remove proteins with missing values
-    data_i <- dplyr::filter(data,
-                            {{ sample }} == s & ( {{ replicate }} == rx | {{ replicate }} == ry))
-    data_i <- tidyr::spread(data_i,
-                            key = {{ replicate }},
-                            value = {{ value }})
-    data_i <- na.omit(data_i[,c(rx, ry)])
-    colnames(data_i) <- c("rx", "ry")
+    data_rx <- dplyr::filter(data,
+                             {{ sample }} == s & {{ replicate }} == rx)
+    data_ry <- dplyr::filter(data,
+                             {{ sample }} == s & {{ replicate }} == ry)
 
-    if (nrow(data_i) > 0){
-      # calculate adjusted r-squared
-      # write into results table
-      correlations[i,"adj_rsq"] <- summary(stats::lm(ry ~ rx, data_i))["adj.r.squared"]
-      correlations[i,"shared"] <- nrow(data_i)
+    # check that data from both replicates are present
+    # if not, proceed directly to writing into table
+    if (nrow(data_rx) > 0 & nrow(data_ry) > 0){
 
-    } else if (nrow(data_i) == 0){
+      # combine data_rx and data_ry
+      # spread data
+      # remove proteins with missing values
+      data_i <- rbind.data.frame(data_rx, data_ry)
+      data_i <- tidyr::spread(data_i,
+                              key = {{ replicate }},
+                              value = {{ value }})
+      data_i <- na.omit(data_i[,c(rx, ry)])
+      colnames(data_i) <- c("rx", "ry")
+
+      # check that at least one protein with values for both replicates remains
+      # if not, proceed directly to writing into table
+      if (nrow(data_i) > 0){
+        # calculate adjusted r-squared
+        # write into results table
+        correlations[i,"adj_rsq"] <- summary(stats::lm(ry ~ rx, data_i))["adj.r.squared"]
+        correlations[i,"shared"] <- nrow(data_i)
+
+      } else if (nrow(data_i) == 0){
+        # write into results table
+        correlations[i,"adj_rsq"] <- NA
+        correlations[i,"shared"] <- 0
+      }
+
+    } else {
       # write into results table
       correlations[i,"adj_rsq"] <- NA
-      correlations[i,"shared"] <- 0
+      correlations[i,"shared"] <- NA
     }
   }
 
